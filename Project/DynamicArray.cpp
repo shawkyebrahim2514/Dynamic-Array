@@ -2,6 +2,8 @@
 #include <iostream>
 #include <string>
 
+// ------------------------------ Dynamic Array implementation -----------------------------
+
 template<typename T>
 DynamicArray<T>::DynamicArray()
 {
@@ -10,9 +12,26 @@ DynamicArray<T>::DynamicArray()
 }
 
 template<typename T>
-DynamicArray<T>::DynamicArray(const DynamicArray &a)
+DynamicArray<T>::DynamicArray(DynamicArray<T> &a)
 {
-    if(this != a) copyArray(a);
+    if(*this != a) copyArray(a);
+}
+
+template<typename T>
+DynamicArray<T>::DynamicArray(const int &size) {
+    this->containerSize = size;
+    this->elementSize = 0;
+    this->container = new T[size];
+}
+
+template<typename T>
+DynamicArray<T>::DynamicArray(const int &size, const T &initialValue) {
+    this->containerSize = size;
+    this->elementSize = size;
+    this->container = new T[size];
+    for (int i = 0; i < size; ++i) {
+        this->container[i] = initialValue;
+    }
 }
 
 template<typename T>
@@ -31,6 +50,7 @@ DynamicArray<T>::~DynamicArray()
 
 template<typename T>
 void DynamicArray<T>::copyArray(const DynamicArray<T> &a) {
+    clear();
     this->containerSize = a.containerSize;
     this->elementSize = a.elementSize;
     delete [] container;
@@ -66,7 +86,7 @@ void DynamicArray<T>::enlargeArray()
 }
 
 template<typename T>
-T DynamicArray<T>::append(const T& a)
+T DynamicArray<T>::append(T a)
 {
     if(this->containerSize == this->elementSize) enlargeArray();
     return this->container[this->elementSize++] = a;
@@ -95,10 +115,10 @@ DynamicArray<T>& DynamicArray<T>::operator=(const DynamicArray<T>& a)
 
 template<typename T>
 DynamicArray<T> &DynamicArray<T>::operator=(DynamicArray<T> &&a) noexcept {
-    if(this != a){
+    if(*this != a){
         copyArray(a);
-        delete a;
     }
+    return *this;
 }
 
 template<typename T>
@@ -110,11 +130,23 @@ void DynamicArray<T>::pop_back() {
 }
 
 template<typename T>
-void DynamicArray<T>::sort(const int& begin, const int& end, const bool& isIncreasing) {
-    if(begin > end || end >= elementSize){
+void DynamicArray<T>::sort(iterator& begin, iterator& end, const bool& isIncreasing) {
+    int from = begin - this->begin();
+    int to = end - this->begin() - 1;
+    if(from > to || to >= elementSize){
         exit(-1);
     }
-    mergeSort(begin, end, isIncreasing);
+    mergeSort(from, to, isIncreasing);
+}
+
+template<typename T>
+void DynamicArray<T>::sort(iterator&& begin, iterator&& end, const bool& isIncreasing) {
+    int from = begin - this->begin();
+    int to = end - this->begin() - 1;
+    if(from > to || to >= elementSize){
+        exit(-1);
+    }
+    mergeSort(from, to, isIncreasing);
 }
 
 template<typename T>
@@ -195,7 +227,8 @@ void DynamicArray<T>::mergeSort(const int& begin, const int& end, const bool& is
 }
 
 template<typename T>
-int DynamicArray<T>::lower_bound(const int &begin, const int &end, const T &value, const bool& isIncreasing) {
+typename DynamicArray<T>::iterator
+DynamicArray<T>::lower_bound(const int &begin, const int &end, const T &value, const bool& isIncreasing) {
     /*
      * if the array is increasing,
      *      return the first index that its value is greater than or equal to the given value in the parameter
@@ -227,8 +260,8 @@ int DynamicArray<T>::lower_bound(const int &begin, const int &end, const T &valu
         }
     }
 
-    if(!foundValue) return -1;
-    else return targetIndex;
+    if(!foundValue) return DynamicArray::iterator(&container[elementSize]);
+    else return DynamicArray::iterator(&container[targetIndex]);
 }
 
 template<typename T>
@@ -267,3 +300,112 @@ int DynamicArray<T>::upper_bound(const int &begin, const int &end, const T &valu
     if(!foundValue) return -1;
     else return targetIndex;
 }
+
+template<typename T>
+void DynamicArray<T>::append(DynamicArray &a) {
+    while(this->elementSize + a.elementSize > this->containerSize){
+        this->enlargeArray();
+    }
+    for(auto& val : a){
+        this->append(val);
+    }
+}
+
+template<typename T>
+void DynamicArray<T>::append(DynamicArray &&a) {
+    while(this->elementSize + a.elementSize > this->containerSize){
+        this->enlargeArray();
+    }
+    for(auto val : a){
+        this->append(val);
+    }
+}
+
+template<typename T>
+void DynamicArray<T>::eliminate() {
+    delete [] container;
+}
+
+template<typename T>
+void swap(DynamicArray<T>& a, DynamicArray<T>& b) {
+    DynamicArray<T> tmp;
+    tmp = std::move(a);
+    a = std::move(b);
+    b = std::move(tmp);
+}
+
+template<typename T>
+bool DynamicArray<T>::operator!=(const DynamicArray<T> &a) {
+    return this->container == a.container;
+}
+
+template<typename T>
+bool DynamicArray<T>::isEmpty() {
+    return !this->elementSize;
+}
+
+template<typename T>
+void DynamicArray<T>::erase(DynamicArray::iterator &itr) {
+    T* containerTmp = new T[this->containerSize];
+    int index = itr - this->begin();
+    int tmpPosition = 0;
+
+    for (int i = 0; i < index; ++i) {
+        containerTmp[tmpPosition ++] = this->container[i];
+    }
+    for (int i = index + 1; i < this->elementSize; ++i) {
+        containerTmp[tmpPosition ++] = this->container[i];
+    }
+
+    delete [] this->container;
+    this->elementSize --;
+    this->container = containerTmp;
+}
+
+// --------------------------------- Iterator implementation ---------------------------------------
+
+template<typename T>
+DynamicArray<T>::iterator::iterator(T *pInt) {
+    // Make the pointer that the iterator refers to equal to the given pointer
+    m_ptr = pInt;
+}
+
+template<typename T>
+T &DynamicArray<T>::iterator::operator*() const {
+    // Return the value that the iterator refers to
+    return *m_ptr;
+}
+
+template<typename T>
+T *DynamicArray<T>::iterator::operator->() {
+    // return the pointer that equal to the iterator
+    return m_ptr;
+}
+
+template<typename T>
+typename DynamicArray<T>::iterator &DynamicArray<T>::iterator::operator++() {
+    // Make the iterator refers to the next position in the memory
+    m_ptr++;
+    return *this;
+}
+
+template<typename T>
+typename DynamicArray<T>::iterator DynamicArray<T>::iterator::operator++(int) {
+    // Postfix increasing iterator will refer to the next position in the memory and will return this new iterator
+    iterator tmp = *this;
+    ++(*this);
+    return tmp;
+}
+
+template<typename T>
+int DynamicArray<T>::iterator::operator-(DynamicArray::iterator another) {
+    // Subtract two iterators from each other
+    return this->m_ptr - another.m_ptr;
+}
+
+template<typename T>
+typename DynamicArray<T>::iterator DynamicArray<T>::iterator::operator+(const int &value) {
+    m_ptr += value;
+    return *this;
+}
+
