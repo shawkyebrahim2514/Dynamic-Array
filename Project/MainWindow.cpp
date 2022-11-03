@@ -3,28 +3,45 @@
 template<typename T>
 DynamicArray<T> myContainer;
 
+void MainWindow::print(const std::string &paragraph) {
+    // Print the paragraph parameter in a suitable form
+    int width = 200;
+    int part = width / 2 - paragraph.size()/2;
+    std::cout << std::string(part, '-') << ' ' << paragraph << ' ' << std::string(part, '-') << '\n';
+}
+
 void MainWindow::run() {
     show();
     takeType();
-    std::string input;
-    std::cout << "Do you want to create another array? y(yes) | n(no)\n";
-    std::cin >> input;
-    if(input == "yes" || input == "y") run();
+    if(continueRunning()) run();
 }
 
 void MainWindow::show() {
-    std::cout << "Enter the type of your array\n";
-    std::cout << "1- int\n";
-    std::cout << "2- long\n";
-    std::cout << "3- float\n";
-    std::cout << "4- char\n";
-    std::cout << "5- string\n";
+    print("Enter the type of your array");
+    std::cout << "1- Int\n";
+    std::cout << "2- Long\n";
+    std::cout << "3- Float\n";
+    std::cout << "4- Char\n";
+    std::cout << "5- String\n";
 }
 
+bool MainWindow::continueRunning() {
+    std::string input;
+    print("Do you want to create another array?");
+    std::cout << "Enter y(yes) | n(no): ";
+    std::cin >> input;
+    if(input == "yes" || input == "y") return true;
+    else return false;
+}
 
 void MainWindow::takeType() {
     int input;
+    std::cout << "Enter your type number here: ";
     std::cin >> input;
+    while (input < 1 || input > 5){
+        std::cout << "Enter correct choice: ";
+        std::cin >> input;
+    }
     switch (input) {
         case 1:
             makeArray(myContainer<int>);
@@ -49,7 +66,7 @@ void MainWindow::makeArray(DynamicArray<T> &a) {
     int containerSize;
     std::cout << "Enter the size of the array: ";
     std::cin >> containerSize;
-    a.clear();
+
     for (int i = 1; i <= containerSize; ++i) {
         T input;
         std::cout << "Enter string number " << i << ": ";
