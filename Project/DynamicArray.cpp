@@ -113,14 +113,6 @@ DynamicArray<T>& DynamicArray<T>::operator=(const DynamicArray<T>& anotherArray)
 }
 
 template<typename T>
-DynamicArray<T> &DynamicArray<T>::operator=(DynamicArray<T> &&anotherArray) noexcept {
-    if(*this != anotherArray){
-        copyArray(anotherArray);
-    }
-    return *this;
-}
-
-template<typename T>
 void DynamicArray<T>::pop_back() {
     if(!elementSize){
         exit(-1);
@@ -129,19 +121,10 @@ void DynamicArray<T>::pop_back() {
 }
 
 template<typename T>
-void DynamicArray<T>::sort(iterator& begin, iterator& end, const bool& isIncreasing) {
-    int from = begin - this->begin();
-    int to = end - this->begin() - 1;
-    if(from > to || to >= elementSize){
-        exit(-1);
-    }
-    mergeSort(from, to, isIncreasing);
-}
-
-template<typename T>
-void DynamicArray<T>::sort(iterator&& begin, iterator&& end, const bool& isIncreasing) {
-    int from = begin - this->begin();
-    int to = end - this->begin() - 1;
+void DynamicArray<T>::sort(const iterator& begin, const iterator& end, const bool& isIncreasing) {
+    iterator tmpBegin = begin, tmpEnd = end;
+    int from = tmpBegin - this->begin();
+    int to = tmpEnd - this->begin() - 1;
     if(from > to || to >= elementSize){
         exit(-1);
     }
@@ -227,14 +210,16 @@ void DynamicArray<T>::mergeSort(const int& begin, const int& end, const bool& is
 
 template<typename T>
 typename DynamicArray<T>::iterator
-DynamicArray<T>::lower_bound(const int &begin, const int &end, const T &value, const bool& isIncreasing) {
+DynamicArray<T>::lower_bound(const iterator &begin,const iterator &end, const T &value, const bool& isIncreasing) {
     /*
      * if the array is increasing,
      *      return the first index that its value is greater than or equal to the given value in the parameter
      * if the array is decreasing,
      *      return the first index that its value is smaller than or equal to the given value in the parameter
      */
-    int l = begin, r = end;
+    iterator tmpBegin = begin;
+    iterator tmpEnd = end;
+    int l = tmpBegin - this->begin(), r = tmpEnd - this->begin() - 1;
     int targetIndex;
     bool foundValue = false;
 
@@ -315,7 +300,7 @@ void DynamicArray<T>::append(DynamicArray &&anotherArray) {
     while(this->elementSize + anotherArray.elementSize > this->containerSize){
         this->enlargeArray();
     }
-    for(auto val : anotherArray){
+    for(auto& val : anotherArray){
         this->append(val);
     }
 }
@@ -345,8 +330,56 @@ bool DynamicArray<T>::isEmpty() {
 
 template<typename T>
 void DynamicArray<T>::erase(DynamicArray::iterator &itr) {
+    if(itr >= this->end()) return;
+
     T* containerTmp = new T[this->containerSize];
     int index = itr - this->begin();
+    int tmpPosition = 0;
+
+    for (int i = 0; i < index; ++i) {
+        containerTmp[tmpPosition ++] = this->container[i];
+    }
+    for (int i = index + 1; i < this->elementSize; ++i) {
+        containerTmp[tmpPosition ++] = this->container[i];
+    }
+
+    delete [] this->container;
+    this->elementSize --;
+    this->container = containerTmp;
+}
+
+template<typename T>
+void DynamicArray<T>::erase(DynamicArray::iterator &&itr) {
+    if(itr >= this->end()) return;
+
+    T* containerTmp = new T[this->containerSize];
+    int index = itr - this->begin();
+    int tmpPosition = 0;
+
+    for (int i = 0; i < index; ++i) {
+        containerTmp[tmpPosition ++] = this->container[i];
+    }
+    for (int i = index + 1; i < this->elementSize; ++i) {
+        containerTmp[tmpPosition ++] = this->container[i];
+    }
+
+    delete [] this->container;
+    this->elementSize --;
+    this->container = containerTmp;
+}
+
+template<typename T>
+void DynamicArray<T>::erase(const T& value) {
+    int index = -1;
+    for (int i = 0; i < this->elementSize; ++i) {
+        if(container[i] == value){
+            index = i;
+            break;
+        }
+    }
+    if(index == -1) return;
+
+    T* containerTmp = new T[this->containerSize];
     int tmpPosition = 0;
 
     for (int i = 0; i < index; ++i) {

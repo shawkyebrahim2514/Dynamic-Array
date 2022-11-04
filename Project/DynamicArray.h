@@ -95,19 +95,19 @@ public:
     void clear();
     bool isEmpty();
     void erase(iterator& itr);
+    void erase(iterator&& itr);
+    void erase(const T& itr);
     T append(T value);
     void append(DynamicArray& anotherArray);
     void append(DynamicArray&& anotherArray);
     void pop_back();
-    void sort(iterator& begin, iterator& end, const bool& isIncreasing = true);
-    void sort(iterator&& begin, iterator&& end, const bool& isIncreasing = true);
-    iterator lower_bound(const int& begin, const int& end, const T& value, const bool& isIncreasing = true);
+    void sort(const iterator& begin, const iterator& end, const bool& isIncreasing = true);
+    iterator lower_bound(const iterator& begin, const iterator& end, const T& value, const bool& isIncreasing = true);
     int upper_bound(const int& begin, const int& end, const T& value, const bool& isIncreasing = true);
     template<typename T1>
     friend void swap(DynamicArray<T1>& firstArray, DynamicArray<T1>& secondArray);
     T & operator[](int index);
     DynamicArray<T>& operator=(const DynamicArray<T>& anotherArray);
-    DynamicArray<T>& operator=(DynamicArray<T>&& anotherArray) noexcept;
     bool operator==(const DynamicArray<T>& anotherArray);
     bool operator!=(const DynamicArray<T>& anotherArray);
 };
