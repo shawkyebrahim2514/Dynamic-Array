@@ -1,5 +1,4 @@
 #include "DynamicArray.h"
-#include <iostream>
 #include <string>
 
 // ------------------------------ Dynamic Array implementation -----------------------------
@@ -12,9 +11,9 @@ DynamicArray<T>::DynamicArray()
 }
 
 template<typename T>
-DynamicArray<T>::DynamicArray(DynamicArray<T> &a)
+DynamicArray<T>::DynamicArray(DynamicArray<T> &anotherArray)
 {
-    if(*this != a) copyArray(a);
+    if(*this != anotherArray) copyArray(anotherArray);
 }
 
 template<typename T>
@@ -35,10 +34,10 @@ DynamicArray<T>::DynamicArray(const int &size, const T &initialValue) {
 }
 
 template<typename T>
-DynamicArray<T>::DynamicArray(DynamicArray &&a) noexcept {
-    if(this != a){
-        copyArray(a);
-        delete a;
+DynamicArray<T>::DynamicArray(DynamicArray &&anotherArray) noexcept {
+    if(this != anotherArray){
+        copyArray(anotherArray);
+        delete anotherArray;
     }
 }
 
@@ -49,24 +48,24 @@ DynamicArray<T>::~DynamicArray()
 }
 
 template<typename T>
-void DynamicArray<T>::copyArray(const DynamicArray<T> &a) {
+void DynamicArray<T>::copyArray(const DynamicArray<T> &anotherArray) {
     clear();
-    this->containerSize = a.containerSize;
-    this->elementSize = a.elementSize;
+    this->containerSize = anotherArray.containerSize;
+    this->elementSize = anotherArray.elementSize;
     delete [] container;
     container = new T[this->containerSize];
     for (int i = 0; i < this->elementSize; ++i)
-        container[i] = a.container[i];
+        container[i] = anotherArray.container[i];
 }
 
 template<typename T>
-T &DynamicArray<T>::operator[](int k)
+T &DynamicArray<T>::operator[](int index)
         {
-    if(k >= elementSize)
+    if(index >= elementSize)
     {
         std::exit(-1);
     }
-    return container[k];
+    return container[index];
 }
 
 template<typename T>
@@ -86,10 +85,10 @@ void DynamicArray<T>::enlargeArray()
 }
 
 template<typename T>
-T DynamicArray<T>::append(T a)
+T DynamicArray<T>::append(T value)
 {
     if(this->containerSize == this->elementSize) enlargeArray();
-    return this->container[this->elementSize++] = a;
+    return this->container[this->elementSize++] = value;
 }
 
 template<typename T>
@@ -107,16 +106,16 @@ int DynamicArray<T>::size()
 }
 
 template<typename T>
-DynamicArray<T>& DynamicArray<T>::operator=(const DynamicArray<T>& a)
+DynamicArray<T>& DynamicArray<T>::operator=(const DynamicArray<T>& anotherArray)
 {
-    copyArray(a);
+    copyArray(anotherArray);
     return *this;
 }
 
 template<typename T>
-DynamicArray<T> &DynamicArray<T>::operator=(DynamicArray<T> &&a) noexcept {
-    if(*this != a){
-        copyArray(a);
+DynamicArray<T> &DynamicArray<T>::operator=(DynamicArray<T> &&anotherArray) noexcept {
+    if(*this != anotherArray){
+        copyArray(anotherArray);
     }
     return *this;
 }
@@ -302,41 +301,36 @@ int DynamicArray<T>::upper_bound(const int &begin, const int &end, const T &valu
 }
 
 template<typename T>
-void DynamicArray<T>::append(DynamicArray &a) {
-    while(this->elementSize + a.elementSize > this->containerSize){
+void DynamicArray<T>::append(DynamicArray &anotherArray) {
+    while(this->elementSize + anotherArray.elementSize > this->containerSize){
         this->enlargeArray();
     }
-    for(auto& val : a){
+    for(auto& val : anotherArray){
         this->append(val);
     }
 }
 
 template<typename T>
-void DynamicArray<T>::append(DynamicArray &&a) {
-    while(this->elementSize + a.elementSize > this->containerSize){
+void DynamicArray<T>::append(DynamicArray &&anotherArray) {
+    while(this->elementSize + anotherArray.elementSize > this->containerSize){
         this->enlargeArray();
     }
-    for(auto val : a){
+    for(auto val : anotherArray){
         this->append(val);
     }
 }
 
 template<typename T>
-void DynamicArray<T>::eliminate() {
-    delete [] container;
-}
-
-template<typename T>
-void swap(DynamicArray<T>& a, DynamicArray<T>& b) {
+void swap(DynamicArray<T>& firstArray, DynamicArray<T>& secondArray) {
     DynamicArray<T> tmp;
-    tmp = std::move(a);
-    a = std::move(b);
-    b = std::move(tmp);
+    tmp = std::move(firstArray);
+    firstArray = std::move(secondArray);
+    secondArray = std::move(tmp);
 }
 
 template<typename T>
-bool DynamicArray<T>::operator!=(const DynamicArray<T> &a) {
-    return this->container == a.container;
+bool DynamicArray<T>::operator!=(const DynamicArray<T> &anotherArray) {
+    return this->container == anotherArray.container;
 }
 
 template<typename T>
@@ -365,9 +359,9 @@ void DynamicArray<T>::erase(DynamicArray::iterator &itr) {
 // --------------------------------- Iterator implementation ---------------------------------------
 
 template<typename T>
-DynamicArray<T>::iterator::iterator(T *pInt) {
+DynamicArray<T>::iterator::iterator(T *pointer) {
     // Make the pointer that the iterator refers to equal to the given pointer
-    iterator_ptr = pInt;
+    iterator_ptr = pointer;
 }
 
 template<typename T>
@@ -398,9 +392,9 @@ typename DynamicArray<T>::iterator DynamicArray<T>::iterator::operator++(int) {
 }
 
 template<typename T>
-int DynamicArray<T>::iterator::operator-(DynamicArray::iterator another) {
+int DynamicArray<T>::iterator::operator-(DynamicArray::iterator anotherIterator) {
     // Subtract two iterators from each other
-    return this->iterator_ptr - another.iterator_ptr;
+    return this->iterator_ptr - anotherIterator.iterator_ptr;
 }
 
 template<typename T>
@@ -412,11 +406,10 @@ typename DynamicArray<T>::iterator DynamicArray<T>::iterator::operator+(const in
 
 // --------------------------------- Reversed iterator implementation ---------------------------------------
 
-
 template<typename T>
-DynamicArray<T>::reverse_iterator::reverse_iterator(T *pInt) {
+DynamicArray<T>::reverse_iterator::reverse_iterator(T *pointer) {
     // Make the pointer that the reversed iterator refers to equal to the given pointer
-    reverse_iterator_ptr = pInt;
+    reverse_iterator_ptr = pointer;
 }
 
 template<typename T>
@@ -449,9 +442,9 @@ typename DynamicArray<T>::reverse_iterator DynamicArray<T>::reverse_iterator::op
 }
 
 template<typename T>
-int DynamicArray<T>::reverse_iterator::operator-(DynamicArray::reverse_iterator another) {
+int DynamicArray<T>::reverse_iterator::operator-(DynamicArray::reverse_iterator anotherReversedIterator) {
     // Subtract two iterators from each other
-    return this->reverse_iterator_ptr - another.reverse_iterator_ptr;
+    return this->reverse_iterator_ptr - anotherReversedIterator.reverse_iterator_ptr;
 }
 
 template<typename T>

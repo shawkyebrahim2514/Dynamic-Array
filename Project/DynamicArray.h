@@ -8,8 +8,7 @@ class DynamicArray {
     int containerSize;
     T* container;
     void enlargeArray();
-    void eliminate(); // unused
-    void copyArray(const DynamicArray<T>& a);
+    void copyArray(const DynamicArray<T>& anotherArray);
     void mergeSort(const int& begin, const int& end, const bool& isIncreasing);
     void mergeRecursion(const int& left, const int& mid, const int& right, const bool& isIncreasing);
 
@@ -19,7 +18,7 @@ public:
     {
     public:
         iterator(){};
-        explicit iterator(T *pInt);
+        explicit iterator(T *pointer);
 
         T& operator*() const;
         T* operator->();
@@ -31,15 +30,17 @@ public:
         iterator operator++(int);
 
         // Subtract two iterators
-        int operator-(iterator another);
+        int operator-(iterator anotherIterator);
 
         // Shift the iterator by value times
         iterator operator+(const int& value);
 
         // Check if these two iterators equal to each other
-        friend bool operator== (const iterator& a, const iterator& b) {return a.iterator_ptr == b.iterator_ptr;};
+        friend bool operator== (const iterator& firstIterator, const iterator& secondIterator)
+            {return firstIterator.iterator_ptr == secondIterator.iterator_ptr;};
         // Check if these two iterators not equal to each other
-        friend bool operator!= (const iterator& a, const iterator& b) {return a.iterator_ptr != b.iterator_ptr;};
+        friend bool operator!= (const iterator& firstIterator, const iterator& secondIterator)
+            {return firstIterator.iterator_ptr != secondIterator.iterator_ptr;};
 
     private:
         T* iterator_ptr{};
@@ -52,7 +53,7 @@ public:
     {
     public:
         reverse_iterator(){};
-        explicit reverse_iterator(T *pInt);
+        explicit reverse_iterator(T *pointer);
 
         T& operator*() const;
         T* operator->();
@@ -64,15 +65,17 @@ public:
         reverse_iterator operator++(int);
 
         // Subtract two iterators
-        int operator-(reverse_iterator another);
+        int operator-(reverse_iterator anotherReversedIterator);
 
         // Shift the iterator by value times
         reverse_iterator operator+(const int& value);
 
         // Check if these two iterators equal to each other
-        friend bool operator== (const reverse_iterator& a, const reverse_iterator& b) {return a.reverse_iterator_ptr == b.reverse_iterator_ptr;};
+        friend bool operator== (const reverse_iterator& firstReversedIterator, const reverse_iterator& secondReversedIterator)
+            {return firstReversedIterator.reverse_iterator_ptr == secondReversedIterator.reverse_iterator_ptr;};
         // Check if these two iterators not equal to each other
-        friend bool operator!= (const reverse_iterator& a, const reverse_iterator& b) {return a.reverse_iterator_ptr != b.reverse_iterator_ptr;};
+        friend bool operator!= (const reverse_iterator& firstReversedIterator, const reverse_iterator& secondReversedIterator)
+            {return firstReversedIterator.reverse_iterator_ptr != secondReversedIterator.reverse_iterator_ptr;};
 
     private:
         T* reverse_iterator_ptr{};
@@ -83,18 +86,18 @@ public:
 
     // -------------------- Dynamic array definition ----------------------------
     DynamicArray();
-    DynamicArray(DynamicArray& a);
-    DynamicArray(DynamicArray&& a) noexcept;
+    DynamicArray(DynamicArray& anotherArray);
+    DynamicArray(DynamicArray&& anotherArray) noexcept;
     explicit DynamicArray(const int& size);
     DynamicArray(const int& size, const T& initialValue);
     ~DynamicArray();
-    T & operator[](int k);
-    DynamicArray<T>& operator=(const DynamicArray<T>& a);
-    bool operator!=(const DynamicArray<T>& a);
-    DynamicArray<T>& operator=(DynamicArray<T>&& a) noexcept;
-    T append(T a);
-    void append(DynamicArray& a);
-    void append(DynamicArray&& a);
+    T & operator[](int index);
+    DynamicArray<T>& operator=(const DynamicArray<T>& anotherArray);
+    bool operator!=(const DynamicArray<T>& anotherArray);
+    DynamicArray<T>& operator=(DynamicArray<T>&& anotherArray) noexcept;
+    T append(T value);
+    void append(DynamicArray& anotherArray);
+    void append(DynamicArray&& anotherArray);
     void pop_back();
     int size();
     void clear();
@@ -103,7 +106,7 @@ public:
     iterator lower_bound(const int& begin, const int& end, const T& value, const bool& isIncreasing = true);
     int upper_bound(const int& begin, const int& end, const T& value, const bool& isIncreasing = true);
     template<typename T1>
-    friend void swap(DynamicArray<T1>& a, DynamicArray<T1>& b);
+    friend void swap(DynamicArray<T1>& firstArray, DynamicArray<T1>& secondArray);
     bool isEmpty();
     void erase(iterator& itr);
 };
