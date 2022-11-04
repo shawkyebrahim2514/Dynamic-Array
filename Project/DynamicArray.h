@@ -91,24 +91,25 @@ public:
     explicit DynamicArray(const int& size);
     DynamicArray(const int& size, const T& initialValue);
     ~DynamicArray();
-    T & operator[](int index);
-    DynamicArray<T>& operator=(const DynamicArray<T>& anotherArray);
-    bool operator!=(const DynamicArray<T>& anotherArray);
-    DynamicArray<T>& operator=(DynamicArray<T>&& anotherArray) noexcept;
+    int size();
+    void clear();
+    bool isEmpty();
+    void erase(iterator& itr);
     T append(T value);
     void append(DynamicArray& anotherArray);
     void append(DynamicArray&& anotherArray);
     void pop_back();
-    int size();
-    void clear();
     void sort(iterator& begin, iterator& end, const bool& isIncreasing = true);
     void sort(iterator&& begin, iterator&& end, const bool& isIncreasing = true);
     iterator lower_bound(const int& begin, const int& end, const T& value, const bool& isIncreasing = true);
     int upper_bound(const int& begin, const int& end, const T& value, const bool& isIncreasing = true);
     template<typename T1>
     friend void swap(DynamicArray<T1>& firstArray, DynamicArray<T1>& secondArray);
-    bool isEmpty();
-    void erase(iterator& itr);
+    T & operator[](int index);
+    DynamicArray<T>& operator=(const DynamicArray<T>& anotherArray);
+    DynamicArray<T>& operator=(DynamicArray<T>&& anotherArray) noexcept;
+    bool operator==(const DynamicArray<T>& anotherArray);
+    bool operator!=(const DynamicArray<T>& anotherArray);
 };
 
 #endif

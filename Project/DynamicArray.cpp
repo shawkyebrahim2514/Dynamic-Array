@@ -329,8 +329,13 @@ void swap(DynamicArray<T>& firstArray, DynamicArray<T>& secondArray) {
 }
 
 template<typename T>
-bool DynamicArray<T>::operator!=(const DynamicArray<T> &anotherArray) {
+bool DynamicArray<T>::operator==(const DynamicArray<T> &anotherArray) {
     return this->container == anotherArray.container;
+}
+
+template<typename T>
+bool DynamicArray<T>::operator!=(const DynamicArray<T> &anotherArray) {
+    return this->container != anotherArray.container;
 }
 
 template<typename T>
