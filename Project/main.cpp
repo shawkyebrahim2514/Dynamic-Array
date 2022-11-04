@@ -58,9 +58,19 @@ arr.append(5);
 //    arr.erase(itr);
 //    for(auto& val : arr) std::cout << val << ' ';
 //    std::cout << '\n';
-auto begin = arr.begin(), end = arr.end();
+for(auto& val : arr) std::cout << val << ' ';
+std::cout << '\n';
+for(auto itr = arr.rbegin(); itr != arr.rend(); itr ++){
+    std::cout << *itr << ' ';
+}
+std::cout << '\n';
+auto itr2 = arr.rbegin();
+std::cout << *itr2;
+std::cout << '\n';
 arr.sort(arr.begin(), arr.end());
-//auto itr = arr.begin();
-//std::cout << *(itr+3);
+auto itr = arr.begin();
+std::cout << *itr;
+std::vector<int> vec;
+DynamicArray<int>::iterator b;
 }
 

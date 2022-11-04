@@ -367,25 +367,25 @@ void DynamicArray<T>::erase(DynamicArray::iterator &itr) {
 template<typename T>
 DynamicArray<T>::iterator::iterator(T *pInt) {
     // Make the pointer that the iterator refers to equal to the given pointer
-    m_ptr = pInt;
+    iterator_ptr = pInt;
 }
 
 template<typename T>
 T &DynamicArray<T>::iterator::operator*() const {
     // Return the value that the iterator refers to
-    return *m_ptr;
+    return *iterator_ptr;
 }
 
 template<typename T>
 T *DynamicArray<T>::iterator::operator->() {
     // return the pointer that equal to the iterator
-    return m_ptr;
+    return iterator_ptr;
 }
 
 template<typename T>
 typename DynamicArray<T>::iterator &DynamicArray<T>::iterator::operator++() {
     // Make the iterator refers to the next position in the memory
-    m_ptr++;
+    iterator_ptr++;
     return *this;
 }
 
@@ -400,12 +400,63 @@ typename DynamicArray<T>::iterator DynamicArray<T>::iterator::operator++(int) {
 template<typename T>
 int DynamicArray<T>::iterator::operator-(DynamicArray::iterator another) {
     // Subtract two iterators from each other
-    return this->m_ptr - another.m_ptr;
+    return this->iterator_ptr - another.iterator_ptr;
 }
 
 template<typename T>
 typename DynamicArray<T>::iterator DynamicArray<T>::iterator::operator+(const int &value) {
-    m_ptr += value;
+    // Make the iterator jumps to the position ( pointer + value )
+    iterator_ptr += value;
     return *this;
 }
 
+// --------------------------------- Reversed iterator implementation ---------------------------------------
+
+
+template<typename T>
+DynamicArray<T>::reverse_iterator::reverse_iterator(T *pInt) {
+    // Make the pointer that the reversed iterator refers to equal to the given pointer
+    reverse_iterator_ptr = pInt;
+}
+
+template<typename T>
+T &DynamicArray<T>::reverse_iterator::operator*() const {
+    // Return the value that the reversed iterator refers to
+    return *reverse_iterator_ptr;
+}
+
+template<typename T>
+T *DynamicArray<T>::reverse_iterator::operator->() {
+    // return the pointer that equal to the reversed iterator
+    return reverse_iterator_ptr;
+}
+
+template<typename T>
+typename DynamicArray<T>::reverse_iterator &DynamicArray<T>::reverse_iterator::operator++() {
+    // Make the reversed iterator refers to the previous position in the memory
+    reverse_iterator_ptr --;
+    return *this;
+}
+
+template<typename T>
+typename DynamicArray<T>::reverse_iterator DynamicArray<T>::reverse_iterator::operator++(int) {
+    // Postfix decreasing reversed iterator will refer to the previous position in the memory
+    // and will return this new reversed iterator
+    reverse_iterator tmp = *this;
+    // ++ operator will make the pointer refers to the previous position in th memory
+    ++ (*this);
+    return tmp;
+}
+
+template<typename T>
+int DynamicArray<T>::reverse_iterator::operator-(DynamicArray::reverse_iterator another) {
+    // Subtract two iterators from each other
+    return this->reverse_iterator_ptr - another.reverse_iterator_ptr;
+}
+
+template<typename T>
+typename DynamicArray<T>::reverse_iterator DynamicArray<T>::reverse_iterator::operator+(const int &value) {
+    // Make the reversed iterator jumps to the position ( pointer + value )
+    reverse_iterator_ptr += value;
+    return *this;
+}
