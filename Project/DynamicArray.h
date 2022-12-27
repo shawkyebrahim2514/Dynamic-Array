@@ -183,6 +183,10 @@ public:
     bool operator<(const DynamicArray<T> &anotherVector);
 
     bool operator>(const DynamicArray<T> &anotherVector);
+
+    bool operator<=(const DynamicArray<T> &anotherVector);
+
+    bool operator>=(const DynamicArray<T> &anotherVector);
 };
 
 #endif

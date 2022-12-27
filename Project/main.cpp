@@ -4,9 +4,6 @@
 
 int main() {
     DynamicArray<int> vector1{1, 2, 3, 4, 5};
-    for(auto itr = vector1.rbegin(); itr != vector1.rend(); itr++){
-        std::cout << *itr << ' ';
-    }
     DynamicArray<int> vector2(6, 12);
     DynamicArray<int> vector3(vector2);
     DynamicArray<int> vector4(DynamicArray<int>{7, 8, 9, 10, 11});
@@ -15,10 +12,6 @@ int main() {
     std::cout << "vector1: ";
     for (auto &val: vector1) {
         std::cout << val << ' ';
-    }
-    std::cout << '\n' << vector1.size() << '\n';
-    for (int i = 0; i < vector1.size(); ++i) {
-        std::cout << vector1[i] << ' ';
     }
     std::cout << '\n';
     std::cout << "vector2: ";
