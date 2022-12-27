@@ -1,115 +1,188 @@
 #ifndef DYNAMIC_CLASS_ARRAY_DYNAMICARRAY_H
 #define DYNAMIC_CLASS_ARRAY_DYNAMICARRAY_H
+
 #include <iostream>
 
 template<typename T>
 class DynamicArray {
-    int elementSize;
-    int containerSize;
-    T* container;
+    int currentSize;
+    int currentCapacity;
+    T *container;
+
     void enlargeArray();
-    void copyArray(const DynamicArray<T>& anotherArray);
-    void mergeSort(const int& begin, const int& end, const bool& isIncreasing);
-    void mergeRecursion(const int& left, const int& mid, const int& right, const bool& isIncreasing);
+
+    void copyArray(const DynamicArray<T> &anotherArray);
+
+    void mergeSort(const int &begin, const int &end, const bool &isIncreasing);
+
+    void mergeRecursion(const int &left, const int &mid, const int &right, const bool &isIncreasing);
 
 public:
-    // ------------------------- iterator definition --------------------------
-    class iterator
-    {
+
+    // ------------------------- iterator class --------------------------
+
+    class iterator {
     public:
-        iterator(){};
+        iterator();
+
         explicit iterator(T *pointer);
 
-        T& operator*() const;
-        T* operator->();
+        T &operator*() const;
 
-        // Prefix increment
-        iterator& operator++();
+        T *operator->();
 
-        // Postfix increment
-        iterator operator++(int);
+        iterator &operator++();
 
-        // Subtract two iterators
+        const iterator operator++(int);
+
+        iterator operator+(const int &value);
+
         int operator-(iterator anotherIterator);
 
-        // Shift the iterator by value times
-        iterator operator+(const int& value);
+        iterator operator-(const int &value);
 
-        // Check if these two iterators equal to each other
-        friend bool operator== (const iterator& firstIterator, const iterator& secondIterator)
-            {return firstIterator.iterator_ptr == secondIterator.iterator_ptr;};
-        // Check if these two iterators not equal to each other
-        friend bool operator!= (const iterator& firstIterator, const iterator& secondIterator)
-            {return firstIterator.iterator_ptr != secondIterator.iterator_ptr;};
+        friend bool operator==(const iterator &firstIterator, const iterator &secondIterator) {
+            return firstIterator.pointer == secondIterator.pointer;
+        };
 
+        friend bool operator!=(const iterator &firstIterator, const iterator &secondIterator) {
+            return firstIterator.pointer != secondIterator.pointer;
+        };
+
+        friend bool operator<(const iterator &firstIterator, const iterator &secondIterator) {
+            return firstIterator.pointer < secondIterator.pointer;
+        };
+
+        friend bool operator>(const iterator &firstIterator, const iterator &secondIterator) {
+            return firstIterator.pointer > secondIterator.pointer;
+        };
+
+        friend bool operator<=(const iterator &firstIterator, const iterator &secondIterator) {
+            return firstIterator.pointer < secondIterator.pointer || firstIterator.pointer == secondIterator.pointer;
+        };
+
+        friend bool operator>=(const iterator &firstIterator, const iterator &secondIterator) {
+            return firstIterator.pointer > secondIterator.pointer || firstIterator.ptr == secondIterator.pointer;
+        };
     private:
-        T* iterator_ptr{};
+        T *pointer{};
     };
-    iterator begin() { return iterator(static_cast<iterator>(&container[0])); }
-    iterator end()   { return iterator(&container[elementSize]); }
 
-    // -------------------- reversed iterator definition ------------------------
-    class reverse_iterator
-    {
+    iterator begin() { return iterator(container); }
+
+    iterator end() { return iterator(&container[currentSize]); }
+
+    // ------------------------- reverse iterator class --------------------------
+
+    class reverse_iterator {
     public:
-        reverse_iterator(){};
+        reverse_iterator();
+
         explicit reverse_iterator(T *pointer);
 
-        T& operator*() const;
-        T* operator->();
+        T &operator*() const;
 
-        // Prefix increment
-        reverse_iterator& operator++();
+        T *operator->();
 
-        // Postfix increment
-        reverse_iterator operator++(int);
+        reverse_iterator &operator++();
 
-        // Subtract two iterators
+        const reverse_iterator operator++(int);
+
         int operator-(reverse_iterator anotherReversedIterator);
 
-        // Shift the iterator by value times
-        reverse_iterator operator+(const int& value);
+        reverse_iterator operator+(const int &value);
 
-        // Check if these two iterators equal to each other
-        friend bool operator== (const reverse_iterator& firstReversedIterator, const reverse_iterator& secondReversedIterator)
-            {return firstReversedIterator.reverse_iterator_ptr == secondReversedIterator.reverse_iterator_ptr;};
-        // Check if these two iterators not equal to each other
-        friend bool operator!= (const reverse_iterator& firstReversedIterator, const reverse_iterator& secondReversedIterator)
-            {return firstReversedIterator.reverse_iterator_ptr != secondReversedIterator.reverse_iterator_ptr;};
+        friend bool operator==(const reverse_iterator &firstIterator, const reverse_iterator &secondIterator) {
+            return firstIterator.pointer == secondIterator.pointer;
+        };
 
+        friend bool operator!=(const reverse_iterator &firstIterator, const reverse_iterator &secondIterator) {
+            return firstIterator.pointer != secondIterator.pointer;
+        };
+
+        friend bool operator<(const reverse_iterator &firstIterator, const reverse_iterator &secondIterator) {
+            return firstIterator.pointer < secondIterator.pointer;
+        };
+
+        friend bool operator>(const reverse_iterator &firstIterator, const reverse_iterator &secondIterator) {
+            return firstIterator.pointer > secondIterator.pointer;
+        };
+
+        friend bool operator<=(const reverse_iterator &firstIterator, const reverse_iterator &secondIterator) {
+            return firstIterator.pointer < secondIterator.pointer || firstIterator.pointer == secondIterator.pointer;
+        };
+
+        friend bool operator>=(const reverse_iterator &firstIterator, const reverse_iterator &secondIterator) {
+            return firstIterator.pointer > secondIterator.pointer || firstIterator.pointer == secondIterator.pointer;
+        };
     private:
-        T* reverse_iterator_ptr{};
+        T *pointer{};
     };
 
-    reverse_iterator rbegin() { return reverse_iterator(static_cast<reverse_iterator>(&container[elementSize - 1])); }
-    reverse_iterator rend()   { return reverse_iterator(container - 1); }
+    reverse_iterator rbegin() { return reverse_iterator(&container[currentSize - 1]); }
+
+    reverse_iterator rend() { return reverse_iterator(container - 1); }
 
     // -------------------- Dynamic array definition ----------------------------
+
     DynamicArray();
-    DynamicArray(DynamicArray& anotherArray);
-    DynamicArray(DynamicArray&& anotherArray) noexcept;
-    explicit DynamicArray(const int& size);
-    DynamicArray(const int& size, const T& initialValue);
+
+    DynamicArray(DynamicArray &anotherArray);
+
+    DynamicArray(DynamicArray &&anotherArray) noexcept;
+
+    DynamicArray(std::initializer_list<T> list);
+
+    explicit DynamicArray(const int &size);
+
+    DynamicArray(const int &size, const T &initialValue);
+
     ~DynamicArray();
+
     int size();
+
     void clear();
+
     bool isEmpty();
-    void erase(iterator& itr);
-    void erase(iterator&& itr);
-    void erase(const T& itr);
-    T append(T value);
-    void append(DynamicArray& anotherArray);
-    void append(DynamicArray&& anotherArray);
+
+    void erase(iterator position);
+
+    void erase(const T &position);
+
+    void erase(iterator startPosition, iterator endPosition);
+
+    void resize(int newSize);
+
+    void insert(iterator position, T value);
+
+    T push_back(T value);
+
+    void push_back(DynamicArray &anotherArray);
+
+    void push_back(DynamicArray &&anotherArray);
+
     void pop_back();
-    void sort(const iterator& begin, const iterator& end, const bool& isIncreasing = true);
-    iterator lower_bound(const iterator& begin, const iterator& end, const T& value, const bool& isIncreasing = true);
-    int upper_bound(const int& begin, const int& end, const T& value, const bool& isIncreasing = true);
+
+    void sort(const iterator &begin, const iterator &end, const bool &isIncreasing = true);
+
+    iterator lower_bound(const iterator &begin, const iterator &end, const T &value, const bool &isIncreasing = true);
+
+    iterator upper_bound(const iterator &begin, const iterator &end, const T &value, const bool &isIncreasing = true);
+
     template<typename T1>
-    friend void swap(DynamicArray<T1>& firstArray, DynamicArray<T1>& secondArray);
-    T & operator[](int index);
-    DynamicArray<T>& operator=(const DynamicArray<T>& anotherArray);
-    bool operator==(const DynamicArray<T>& anotherArray);
-    bool operator!=(const DynamicArray<T>& anotherArray);
+    friend void swap(DynamicArray<T1> &firstArray, DynamicArray<T1> &secondArray);
+
+    T &operator[](int index);
+
+    DynamicArray<T> &operator=(const DynamicArray<T> &anotherArray);
+
+    bool operator==(const DynamicArray<T> &anotherArray);
+
+    bool operator!=(const DynamicArray<T> &anotherArray);
+
+    bool operator<(const DynamicArray<T> &anotherVector);
+
+    bool operator>(const DynamicArray<T> &anotherVector);
 };
 
 #endif

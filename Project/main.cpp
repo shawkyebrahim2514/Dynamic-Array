@@ -3,90 +3,87 @@
 #include <vector>
 
 int main() {
-    DynamicArray<int> array1, array2(55, 55);
-    array1.append(5);
-    array1.append(2);
-    array1.append(3);
-    array1.append(3);
-    array1.append(8);
-    array1.append(4);
-    array1.erase(12);
-    array1.append(DynamicArray<int>(20,10));
-    array1 = DynamicArray<int>(50,20);
-    array1.sort(array1.begin(), array1.end());
-//    array1.erase(array1.begin());
-for(auto val : array1) std::cout << val << ' ';
-std::cout << '\n';
-std::cout << *array1.lower_bound(array1.begin(), array1.end(), 7);
-
-//    MainWindow w;
-//    w.run();
-//    DynamicArray<int> arr(6,2), arr2(3, 15), arr3(DynamicArray<int>(5,66));
-//    for(auto& val : arr) std::cout << val << ' ';
-//    std::cout << '\n';
-//    for(auto& val : arr2) std::cout << val << ' ';
-//    std::cout << '\n';
-//    arr.append(DynamicArray<int>(10, 1000));
-//    swap(arr, arr3);
-//    for(auto& val : arr) std::cout << val << ' ';
-//    std::cout << '\n';
-//    for(auto& val : arr2) std::cout << val << ' ';
-//    std::cout << '\n';
-//    for(auto& val : arr3) std::cout << val << ' ';
-//    std::cout << '\n';
-//    arr.append(8);
-//    arr.append(5);
-//    arr.append(5);
-//    arr.append(5);
-//    arr.append(2);
-//    arr.append(2);
-//    arr.append(7);
-//    arr.sort(0, 6);
-
-//    for (int i = 0; i < 7; ++i) {
-//        std::cout << arr[i];
-//    }
-//    arr.sort(0,6, false);
-//    std::cout << '\n';
-//
-//    for (int i = 0; i < 7; ++i) {
-//        std::cout << arr[i];
-//    }
-//    std::cout << '\n';
-//    std::cout << arr.lower_bound(0, 6, 5, false);
-//DynamicArray<int> arr;
-//arr.append(1);
-//arr.append(2);
-//arr.append(3);
-//arr.append(4);
-//arr.append(5);
-////for(auto& val : arr) std::cout << val << ' ';
-////std::cout << '\n';
-////auto itr = arr.begin();
-////arr.erase(itr);
-////    for(auto& val : arr) std::cout << val << ' ';
-////    std::cout << '\n';
-////    itr = arr.begin();
-////    arr.erase(itr);
-////    for(auto& val : arr) std::cout << val << ' ';
-////    std::cout << '\n';
-////    itr = arr.begin();
-////    arr.erase(itr);
-////    for(auto& val : arr) std::cout << val << ' ';
-////    std::cout << '\n';
-//for(auto& val : arr) std::cout << val << ' ';
-//std::cout << '\n';
-//for(auto itr = arr.rbegin(); itr != arr.rend(); itr ++){
-//    std::cout << *itr << ' ';
-//}
-//std::cout << '\n';
-//auto itr2 = arr.rbegin();
-//std::cout << *itr2;
-//std::cout << '\n';
-//arr.sort(arr.begin(), arr.end());
-//auto itr = arr.begin();
-//std::cout << *itr;
-//std::vector<int> vec;
-//DynamicArray<int>::iterator b;
+    DynamicArray<int> vector1{1, 2, 3, 4, 5};
+    for(auto itr = vector1.rbegin(); itr != vector1.rend(); itr++){
+        std::cout << *itr << ' ';
+    }
+    DynamicArray<int> vector2(6, 12);
+    DynamicArray<int> vector3(vector2);
+    DynamicArray<int> vector4(DynamicArray<int>{7, 8, 9, 10, 11});
+    DynamicArray<int> vector5 = vector4;
+    DynamicArray<int> vector6 = DynamicArray<int>{10, 20, 30, 40, 50};
+    std::cout << "vector1: ";
+    for (auto &val: vector1) {
+        std::cout << val << ' ';
+    }
+    std::cout << '\n' << vector1.size() << '\n';
+    for (int i = 0; i < vector1.size(); ++i) {
+        std::cout << vector1[i] << ' ';
+    }
+    std::cout << '\n';
+    std::cout << "vector2: ";
+    for (auto &val: vector2) std::cout << val << ' ';
+    std::cout << '\n';
+    std::cout << "vector3: ";
+    for (auto &val: vector3) std::cout << val << ' ';
+    std::cout << '\n';
+    std::cout << "vector4: ";
+    for (auto &val: vector4) std::cout << val << ' ';
+    std::cout << '\n';
+    std::cout << "vector5: ";
+    for (auto &val: vector5) std::cout << val << ' ';
+    std::cout << '\n';
+    std::cout << "vector6: ";
+    for (auto &val: vector6) std::cout << val << ' ';
+    std::cout << '\n';
+    std::cout << "-------------------------\n";
+    std::cout << "Is vector1 > vector4: " << (vector1 > vector4) << '\n';
+    std::cout << "Is vector1 < vector4: " << (vector1 < vector4) << '\n';
+    std::cout << "Is vector1 == vector4: " << (vector1 == vector4) << '\n';
+    std::cout << "-------------------------\n";
+    std::cout << "Is vector4 > vector5: " << (vector4 > vector5) << '\n';
+    std::cout << "Is vector4 < vector5: " << (vector4 < vector5) << '\n';
+    std::cout << "Is vector4 == vector5: " << (vector4 == vector5) << '\n';
+    std::cout << "-------------------------\n";
+    std::cout << "Is vector6 > vector5: " << (vector6 > vector5) << '\n';
+    std::cout << "Is vector6 < vector5: " << (vector6 < vector5) << '\n';
+    std::cout << "Is vector6 == vector5: " << (vector6 == vector5) << '\n';
+    std::cout << "-------------------------\n";
+    std::cout << "vector6: ";
+    for (auto &val: vector6) std::cout << val << ' ';
+    std::cout << '\n';
+    std::cout << "Replace the 2nd element in vector6 with (70): ";
+    vector6[1] = 70;
+    for (auto &val: vector6) std::cout << val << ' ';
+    std::cout << '\n';
+    std::cout << "Erasing position 3 from vector6: ";
+    vector6.erase(vector6.begin() + 2);
+    for (auto &val: vector6) std::cout << val << ' ';
+    std::cout << '\n';
+    std::cout << "-------------------------\n";
+    std::cout << "vector4: ";
+    for (auto &val: vector4) std::cout << val << ' ';
+    std::cout << '\n';
+    std::cout << "Erasing from position 2 to position 4 from vector4: ";
+    vector4.erase(vector4.begin() + 1, vector4.end() - 1);
+    for (auto &val: vector4) std::cout << val << ' ';
+    std::cout << '\n';
+    std::cout << "Inserting (100) to the begging of vector4: ";
+    vector4.insert(vector4.begin(), 100);
+    for (auto &val: vector4) std::cout << val << ' ';
+    std::cout << '\n';
+    std::cout << "-------------------------\n";
+    std::cout << "vector6: ";
+    for (auto &val: vector6) std::cout << val << ' ';
+    std::cout << '\n';
+    std::cout << "Resize vector6 to 3 elements only: ";
+    vector6.resize(3);
+    for (auto &val: vector6) std::cout << val << ' ';
+    std::cout << '\n';
+    std::cout << "Resize vector6 to 10 elements only: ";
+    vector6.resize(10);
+    for (auto &val: vector6) std::cout << val << ' ';
+    std::cout << '\n';
+    std::cout << "-------------------------\n";
 }
 
