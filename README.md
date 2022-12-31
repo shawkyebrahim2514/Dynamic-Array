@@ -1,7 +1,7 @@
 # Dynamic Array
  Dynamic array with cpp
 
-## Featurs
+## Features
 * Takes a type parameter to decide the type it will contain.
 * Keeps track of its current size.
 *	Initialization with different ways:
